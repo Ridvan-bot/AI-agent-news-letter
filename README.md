@@ -78,6 +78,13 @@ Notes:
 - `npm run build` – compiles to `dist/`
 - `npm run prod` – runs compiled code
 
+### Deploy to Vercel (daily 07:00)
+
+- This repo includes a `vercel.json` with a cron job hitting `/api/cron` daily.
+- Edit the schedule as needed. Current schedule is `0 6 * * *` (UTC), which is 07:00 CET in winter and 08:00 CEST in summer. Adjust to your timezone if needed.
+- Ensure your `.env` (or Vercel Project Environment Variables) contains the required keys.
+- Deploy to Vercel, then verify the cron in the Project → Settings → Cron Jobs.
+
 ### Project Structure
 
 ```

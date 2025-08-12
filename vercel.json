@@ -1,0 +1,15 @@
+{
+  "functions": {
+    "api/cron.ts": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "0 6 * * *"
+    }
+  ]
+}
+
+
