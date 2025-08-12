@@ -1,6 +1,6 @@
 import { gmail_v1 } from 'googleapis';
 import { Buffer } from 'buffer';
-import cheerio from 'cheerio';
+import { load } from 'cheerio';
 
 export type TldrItem = {
   title: string;
@@ -38,7 +38,8 @@ export function extractHtmlFromMessage(message: gmail_v1.Schema$Message): string
 }
 
 export function parseTldrHtml(html: string): TldrItem[] {
-  const $ = cheerio.load(html);
+  if (!html || html.trim().length === 0) return [];
+  const $ = load(html);
   const items: TldrItem[] = [];
 
   // TLDR layout varies; we heuristically pick link + nearby text

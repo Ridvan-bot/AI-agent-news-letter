@@ -1,55 +1,55 @@
-# AI-agent för TLDR → LinkedIn-sammanfattning (TypeScript / Node.js)
+## AI Agent for TLDR → LinkedIn Summary (TypeScript / Node.js)
 
-En Node.js/TypeScript-agent som:
+A Node.js/TypeScript agent that:
 
-- Läser din Gmail och hämtar endast TLDR-nyhetsbrev (konfigurerbart Gmail-sökfilter)
-  - Alternativ 1 (default): Gmail API med OAuth
-  - Alternativ 2: IMAP + app-lösenord (utan OAuth) – sätt `USE_IMAP=true`
-- Extraherar nyhetslänkar och beskrivingar ur mailet
-- Filtrerar nyheterna mot din tech stack (redigerbar i `data/tech-stack.json` eller via env)
-- Summerar och skriver en LinkedIn-optimerad svensk post (använder OpenAI om API-nyckel finns, annars fallback)
-- Skickar sammanställningen till din egen inbox och markerar TLDR-mailet som läst
+- Reads your Gmail and fetches only TLDR newsletters (configurable Gmail search filter)
+  - Option 1 (default): Gmail API with OAuth
+  - Option 2: IMAP + app password (no OAuth) – set `USE_IMAP=true`
+- Extracts news links and descriptions from the email
+- Filters news against your tech stack (editable in `data/tech-stack.json` or via env)
+- Summarizes into a LinkedIn‑optimized Swedish post (uses OpenAI if API key is present, otherwise fallback)
+- Sends the summary to your own inbox and marks the TLDR email as read
 
-## Snabbstart
+### Quick Start
 
-1) Installera beroenden
+1) Install dependencies
 
 ```bash
 npm install
 ```
 
-2) Skapa Google OAuth-uppgifter för Gmail API
+2) Gmail API with OAuth (optional if you use IMAP)
 
-- Gå till Google Cloud Console → Aktivera Gmail API för ditt projekt
-- Skapa OAuth 2.0 Client ID (Desktop app)
-- Ladda ner JSON-filen och spara som `credentials/oauth.json`
+- In Google Cloud Console → enable Gmail API for your project
+- Create OAuth 2.0 Client ID (Desktop app)
+- Download the JSON file and save as `credentials/oauth.json`
 
-3) Kör autentisering (öppnar webbläsare för att godkänna):
+3) Authenticate (opens a browser for consent)
 
 ```bash
 npm run auth
 ```
 
-4) Konfigurera din tech stack
+4) Configure your tech stack
 
-- Redigera `data/tech-stack.json` med nyckelord/tekniker du vill filtrera på
-- Alternativt sätt env-variabeln `TECH_STACK` (kommaseparerad lista)
+- Edit `data/tech-stack.json` with the keywords/technologies to filter on
+- Alternatively set env `TECH_STACK` (comma‑separated list)
 
-5) (Valfritt) OpenAI för bättre summering
+5) (Optional) OpenAI for higher‑quality summaries
 
-- Lägg till `OPENAI_API_KEY` i `.env` om du vill ha högkvalitativ LinkedIn-sammanfattning
+- Add `OPENAI_API_KEY` to `.env` if you want a better LinkedIn summary
 
-6) Kör agenten
+6) Run the agent
 
 ```bash
 npm run dev
 ```
 
-Sammanfattningen skickas till din inbox. Ändra mottagare via `TO_EMAIL` i `.env` vid behov.
+The summary is sent to your inbox. Change the recipient via `TO_EMAIL` in `.env` if needed.
 
-## Miljövariabler
+### Environment Variables
 
-Skapa en `.env` i projektroten:
+Create a `.env` in the project root:
 
 ```
 OPENAI_API_KEY=sk-...
@@ -62,40 +62,42 @@ USE_IMAP=false
 IMAP_HOST=imap.gmail.com
 IMAP_PORT=993
 IMAP_SECURE=true
-EMAIL_USER=dinadress@gmail.com
-EMAIL_APP_PASSWORD=din-applosen
+EMAIL_USER=youraddress@gmail.com
+EMAIL_APP_PASSWORD=your-app-password
 SENDER_FILTER=@tldrnewsletter.com
 ```
 
-## Scripts
+Notes:
+- Set `USE_IMAP=true` to use IMAP + app password instead of OAuth. Make sure IMAP is enabled in Gmail and 2FA + app password is configured.
+- `SENDER_FILTER` is used for both Gmail API and IMAP to match the TLDR sender domain.
 
-- `npm run auth` – initierar OAuth och sparar token i `credentials/token.json`
-- `npm run dev` – kör agenten i TypeScript via `ts-node`
-- `npm run build` – kompilerar till `dist/`
-- `npm run prod` – kör kompilerad kod
+### Scripts
 
-## Struktur
+- `npm run auth` – initiates OAuth and stores token under `credentials/token.json`
+- `npm run dev` – runs the agent in TypeScript via `ts-node`
+- `npm run build` – compiles to `dist/`
+- `npm run prod` – runs compiled code
+
+### Project Structure
 
 ```
 src/
-  auth.ts         # Gmail OAuth-klient
-  gmail.ts        # Gmail-hjälpfunktioner (hämta, markera läst, skicka)
-  parseTldr.ts    # Parsar TLDR-html till item-lista
-  filter.ts       # Filtrerar items mot tech stack
-  summarize.ts    # LinkedIn-sammanfattning (OpenAI/fallback)
-  config.ts       # Laddar env och tech stack
-  index.ts        # Orkestrering
+  auth.ts         # Gmail OAuth client
+  gmail.ts        # Gmail helpers (fetch, mark read, send)
+  parseTldr.ts    # Parse TLDR HTML into items
+  filter.ts       # Filter items against tech stack
+  summarize.ts    # LinkedIn summary (OpenAI/fallback)
+  config.ts       # Loads env and tech stack
+  index.ts        # Orchestration
 credentials/
-  oauth.json      # Din OAuth Client JSON (läggs av dig)
-  token.json      # Skapas automatiskt efter `npm run auth`
+  oauth.json      # Your OAuth Client JSON (you provide this)
+  token.json      # Created automatically after `npm run auth`
 data/
-  tech-stack.json # Din tech stack (kan ersättas av env TECH_STACK)
+  tech-stack.json # Your tech stack (can be replaced by env TECH_STACK)
 ```
 
-## Noteringar
+### Notes
 
-- Standardfiltret för Gmail är `from:(tldr) is:unread`. Justera via `GMAIL_QUERY` om dina TLDR-nyhetsbrev kommer från andra adresser.
-- Agenten markerar relevanta TLDR-mail som lästa efter att sammanfattningen skickats.
-- Inget i koden postar direkt till LinkedIn; istället får du ett färdigt inlägg via e‑post.
-
-An AI agent that reads gmail email, summurizes it and mark the email as read.
+- Default Gmail filter is `from:(tldr) is:unread`. Adjust via `GMAIL_QUERY` or use `SENDER_FILTER` to target your TLDR sender domain.
+- The agent marks relevant TLDR emails as read after sending the summary.
+- This project does not post directly to LinkedIn; instead you receive a ready‑to‑use post by email.
