@@ -18,6 +18,10 @@ async function run() {
       if (!html) continue;
       const allItems = parseTldrHtml(html);
       const filtered = filterItemsByTechStack(allItems, config.techStack).slice(0, config.maxItems);
+      if (filtered.length === 0) {
+        console.log('Inga relevanta nyheter hittades för detta TLDR-mail (IMAP). Lämnar som oläst:', mail.id);
+        continue;
+      }
       const summary = await summarizeForLinkedIn(filtered);
       await sendSummaryEmail('TLDR → LinkedIn-sammanfattning', summary);
       await markImapMessageAsSeen(mail.id);
@@ -40,6 +44,10 @@ async function run() {
       }
       const allItems = parseTldrHtml(html);
       const filtered = filterItemsByTechStack(allItems, config.techStack).slice(0, config.maxItems);
+      if (filtered.length === 0) {
+        console.log('Inga relevanta nyheter hittades för detta TLDR-mail. Lämnar som oläst:', m.id);
+        continue;
+      }
       const summary = await summarizeForLinkedIn(filtered);
       const subject = 'TLDR → LinkedIn-sammanfattning';
       await sendEmail(gmail, config.toEmail, subject, summary);

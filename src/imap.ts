@@ -21,7 +21,7 @@ export async function fetchUnreadTldrViaImap(limit = 5): Promise<RawMail[]> {
   });
 
   await client.connect();
-  await client.mailboxOpen('INBOX');
+  await client.mailboxOpen('INBOX', { readOnly: false });
 
   // IMAP server-side search is limited; we'll fetch unseen and filter from-header client-side
   const query = { seen: false } as const;
@@ -60,9 +60,9 @@ export async function markImapMessageAsSeen(uid: string): Promise<void> {
     },
   });
   await client.connect();
-  await client.mailboxOpen('INBOX');
+  await client.mailboxOpen('INBOX', { readOnly: false });
   try {
-    await client.messageFlagsAdd(uid, ['\\Seen']);
+    await client.messageFlagsAdd(uid, ['\\Seen'], { uid: true });
   } finally {
     await client.logout();
   }
