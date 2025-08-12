@@ -1,0 +1,44 @@
+{
+  "name": "ai-agent-news-letter",
+  "version": "1.0.0",
+  "description": "An AI agent that reads gmail email, summurizes it and mark the email as read.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "prod": "node dist/index.js",
+    "auth": "ts-node src/auth.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ridvan-bot/AI-agent-news-letter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ridvan-bot/AI-agent-news-letter/issues"
+  },
+  "homepage": "https://github.com/Ridvan-bot/AI-agent-news-letter#readme",
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.1",
+    "googleapis": "^155.0.1",
+    "imapflow": "^1.0.193",
+    "mailparser": "^3.7.4",
+    "nodemailer": "^7.0.5",
+    "openai": "^5.12.2"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/imapflow": "^1.0.23",
+    "@types/mailparser": "^3.4.6",
+    "@types/node": "^24.2.1",
+    "@types/nodemailer": "^6.4.17",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
