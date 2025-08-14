@@ -6,7 +6,7 @@ import { summarizeForLinkedIn } from './summarize';
 import { fetchUnreadTldrViaImap, markImapMessageAsSeen } from './imap';
 import { sendSummaryEmail } from './mailer';
 
-async function run() {
+export async function runAgent() {
   if (config.useImap) {
     const mails = await fetchUnreadTldrViaImap(5);
     if (mails.length === 0) {
@@ -57,9 +57,12 @@ async function run() {
   }
 }
 
-run().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+// Only run automatically when executed directly (not when imported by serverless function)
+if (require.main === module) {
+  runAgent().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
 
 
